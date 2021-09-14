@@ -4,10 +4,11 @@ from tkinter import filedialog
 import os
 from tkinter import messagebox
 from PIL import Image, ImageTk
-
+import imgkit
 
 #Variables Globales
 ruta = ''
+
 def Cargar_Archivo():
     global ruta
     print('Se cargara el archivo')
@@ -22,7 +23,7 @@ def Abrir_Archivo(Direccion):
     try:
         file_entrada = open(Dir,'r')
         primera_lectura = file_entrada.read()
-        print(primera_lectura)
+        ##print(primera_lectura)
     except:
         print('Error al intentar abrir el archivo')
         messagebox.showwarning(message="ERROR al intentar abrir archivo de entrada ", title="ERROR")
@@ -40,17 +41,29 @@ def Abrir_Archivo(Direccion):
                 cache = ''
 
         return primeras_lineas
+def Analizar():
+    #try:
+    dir = ruta
+    print('Se analizara el archivo')
+    print(dir)
+    primeras_lineas = Abrir_Archivo(dir)
+    AFD(primeras_lineas)
+    #except:
+        #tkinter.messagebox.showwarning('ERROR','Aun no hay una ruta para analizar ')
 def AFD(lista_lineas):
     print('Iniciando Automata')
     lista_lineas = lista_lineas
     listaImagenes = []
+    listaFilas2D=['','','','','','','']
     lista2D = []
     CrearUnaLinea = ''
-    print(lista_lineas)
+
+    #print(lista_lineas)
     for h in range(0,len(lista_lineas)):
         CrearUnaLinea = CrearUnaLinea + str(lista_lineas[h])
     CrearUnaLinea = CrearUnaLinea + '$'
     LineaUnica = list(CrearUnaLinea)
+    print('Conjunto de Caracteres:',end='\n')
     print(LineaUnica)
 
     # Estados
@@ -102,11 +115,10 @@ def AFD(lista_lineas):
                 estado = 0
 
 
-    print(listaImagenes)
+    #print(listaImagenes)
 
     for imagenes in range(0,len(listaImagenes)):
         separarImagenes = list(listaImagenes[imagenes])
-
         for separacion in range(0,len(separarImagenes)):
             if estadoNombre == 0:
                 if str(separarImagenes[separacion]) == 'T':
@@ -149,13 +161,12 @@ def AFD(lista_lineas):
                 continue
             if estadoNombre == 9:
                 if str(separarImagenes[separacion]) == ';':
-                    print('este es el cache Nombre', cacheNombre)
-                    #lista_informacion_filtrada.append(cacheNombre)
+                    #print('este es el cache Nombre', cacheNombre)
+                    listaFilas2D[0] = cacheNombre
                     cacheNombre = ''
                     estadoNombre = 0
                 continue
         for ancho in range(0, len(separarImagenes)):
-
             if estadoAncho == 0:
                 if str(separarImagenes[ancho]) == 'A':
                     estadoAncho = 1
@@ -185,7 +196,8 @@ def AFD(lista_lineas):
                     estadoAncho = 6
                     cacheAncho = cacheAncho + str(separarImagenes[ancho])
                 if str(separarImagenes[ancho]) == ';':
-                    print('este es el Ancho', cacheAncho)
+                    #print('este es el Ancho', cacheAncho)
+                    listaFilas2D[1] = cacheAncho
                     cacheAncho = ''
                     estadoAncho = 0
                     #lista_informacion_filtrada.append(cacheAncho)
@@ -222,7 +234,8 @@ def AFD(lista_lineas):
                     if correcto == True:
                         cacheAlto = cacheAlto + str(separarImagenes[alto])
                 if str(separarImagenes[alto]) == ';'and correcto == True:
-                    print('este es el cache Alto',cacheAlto)
+                    #print('este es el cache Alto',cacheAlto)
+                    listaFilas2D[2] = cacheAlto
                     #lista_informacion_filtrada.append(cacheAlto)
                     cacheAlto = ''
                     estadoAlto = 0
@@ -257,7 +270,8 @@ def AFD(lista_lineas):
                     estadoFilas = 6
                     cacheFilas = cacheFilas + str(separarImagenes[filas])
                 if str(separarImagenes[filas]) == ';':
-                    print('este es el numero de Filas', cacheFilas)
+                    #print('este es el numero de Filas', cacheFilas)
+                    listaFilas2D[3] = cacheFilas
                     #lista_informacion_filtrada.append(cacheFilas)
                     cacheFilas = ''
                     estadoFilas = 0
@@ -309,7 +323,9 @@ def AFD(lista_lineas):
                 if str(separarImagenes[columnas]) != ';':
                     estadoColumna = 9
                     cacheColumna = cacheColumna + str(separarImagenes[columnas])
-                    print('Este es el cache columnas', cacheColumna)
+                if str(separarImagenes[columnas]) == ';':
+                    #print('Este es el cache columnas', cacheColumna)
+                    listaFilas2D[4] = cacheColumna
                     cacheColumna = ''
                     estadoColumna = 0
                     #lista_informacion_filtrada.append(cacheColumna
@@ -361,7 +377,8 @@ def AFD(lista_lineas):
                 continue
             if estadoCelda == 9:
                 if str(separarImagenes[celda]) == ';':
-                    print('este es el cahe Celda', cacheCelda)
+                    #print('este es el cahe Celda', cacheCelda)
+                    listaFilas2D[5] = cacheCelda
                     cacheCelda = ''
                     estadoCelda = 0
 
@@ -410,19 +427,148 @@ def AFD(lista_lineas):
                     cacheFiltro = cacheFiltro + str(separarImagenes[filtro])
 
                 if str(separarImagenes[filtro]) == ';':
-                    print('estos son los filtros: ', cacheFiltro)
+                    #print('estos son los filtros: ', cacheFiltro)
+                    listaFilas2D[6] = cacheFiltro
                     cacheFiltro = ''
                     estadoFiltro = 0
                 #lista_informacion_filtrada.append(cacheFiltro)
-def Analizar():
-    try:
-        dir = ruta
-        print('Se analizara el archivo')
-        print(dir)
-        primeras_lineas = Abrir_Archivo(dir)
-        AFD(primeras_lineas)
-    except:
-        tkinter.messagebox.showwarning('ERROR','Aun no hay una ruta para analizar')
+        #print(listaFilas2D)
+
+        lista2D.append(listaFilas2D)
+        listaFilas2D = ['','','','','','','']
+    print('Primer Filtrado:', end='\n')
+    for k in range(0,len(lista2D)):
+        print(lista2D[k],end='\n')
+    Filtro2(lista2D)
+def Filtro2(lista_2D):
+    tamañoXpixel = 0
+    tamañoYpixel = 0
+    print('este es filtro 2')
+    #fila,columna,valicion,color
+    listaCelda = ['','','','']
+    listaCelda2D =[]
+    state = 0
+    cacheF=''
+    cacheC=''
+    cacheV =''
+    cacheCol = ''
+    for i in range(0,len(lista_2D)):
+        nombre = str(lista_2D[i][0])
+        Tx = int(lista_2D[i][1])
+        Ty = int(lista_2D[i][2])
+        NC = int(lista_2D[i][3])
+        NF = int(lista_2D[i][4])
+        tamañoXpixel = int(Tx/NC)
+        tamañoYpixel = int(Ty/NF)
+
+        print(tamañoXpixel,',',tamañoYpixel)
+
+
+        celda = str(lista_2D[i][5])
+        cadenaCelda = list(celda)
+        for letra in range(0,len(cadenaCelda)):
+            if state == 0:
+                if str(cadenaCelda[letra])=='[':
+                    state = 1
+                continue
+            if state == 1:
+                if str(cadenaCelda[letra]) != ',':
+                    state =1
+                    cacheF = cacheF + str(cadenaCelda[letra])
+                if str(cadenaCelda[letra]) == ',':
+                    state = 2
+                    listaCelda[0]=int(cacheF)*tamañoXpixel
+                continue
+            if state == 2:
+                if str(cadenaCelda[letra]) != ',':
+                    cacheC = cacheC + str(cadenaCelda[letra])
+                    state = 2
+                if str(cadenaCelda[letra]) == ',':
+                    state = 3
+                    listaCelda[1] = int(cacheC)*tamañoYpixel
+                continue
+            if state == 3:
+                if str(cadenaCelda[letra]) != ',':
+                    cacheV = cacheV + str(cadenaCelda[letra])
+                    state = 3
+                if str(cadenaCelda[letra]) == ',':
+                    if cacheV == 'TRUE' or cacheV  =='FALSE':
+                        listaCelda[2]=cacheV
+                        state = 4
+                continue
+            if state == 4:
+                if str(cadenaCelda[letra]) != ']':
+                    cacheCol = cacheCol +str(cadenaCelda[letra])
+                    state = 4
+                if str(cadenaCelda[letra]) == ']':
+                    listaCelda[3]=cacheCol
+                    print(listaCelda)
+                    listaCelda2D.append(listaCelda)
+                    cacheF = ''
+                    cacheC = ''
+                    cacheV = ''
+                    cacheCol = ''
+                    listaCelda = ['','','','']
+                    state = 0
+        #print(listaCelda2D)
+        print('esta es la imagen', i)
+        pixel = ''
+        for l in range(0,len(listaCelda2D)):
+            if str(listaCelda2D[l][2]) == 'TRUE':
+                #if l <= len(listaCelda2D)-2:
+                pixel = pixel + ' ' + str(listaCelda2D[l][0])+'px '+str(listaCelda2D[l][1])+'px '+str(listaCelda2D[l][3])+','
+
+        quitarCaracterFinal = list(pixel)
+        Tcadena = len(quitarCaracterFinal)
+        quitarCaracterFinal[Tcadena-1] = '}'
+        pixelRefinado = ''
+        for j in range(0,len(quitarCaracterFinal)):
+            pixelRefinado = pixelRefinado +  str(quitarCaracterFinal[j])
+
+        print('Crear HTML')
+        FSalidaH = open('HTML y CSS/'+nombre+'.html','w')
+        contenidoH = '''<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>'''+nombre+'''</title>
+  <link rel="stylesheet" href="'''+nombre+'''.css">
+</head>
+<body>
+  <div class="pixel-art"></div>
+</body>
+</html>'''
+        FSalidaH.write(contenidoH)
+        FSalidaH.close()
+
+        FSalidaC = open('HTML y CSS/'+nombre+'.css','w')
+        contenidoC = '''body {
+  background-color: white;
+}
+
+.pixel-art {
+  '''+'width:'+str(tamañoXpixel)+'px;'+ 'height:' +str(tamañoYpixel)+'px;'+'margin: 50px;transform: scale(1);box-shadow:'+pixelRefinado
+        FSalidaC.write(contenidoC)
+        FSalidaC.close()
+
+        imgkit.from_file('HTML y CSS/Pokebola.html','out.jpg')
+
+        listaCelda2D = []
+
+
+
+
+
+
+
+
+
+
+
+
+
 def Abrir():
     new = Toplevel(window)
     new.geometry("350x350")
