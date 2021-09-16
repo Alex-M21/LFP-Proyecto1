@@ -5,6 +5,8 @@ import os
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import imgkit
+from html2image import Html2Image
+from AFDERRORES import *
 
 #Variables Globales
 ruta = ''
@@ -31,15 +33,17 @@ def Abrir_Archivo(Direccion):
         print('Se logro abrir archivo de entrada con exito')
         messagebox.showinfo(message="Se logro abrir el archivo de entrada", title="CONFIRMACION")
         primeros_caracteres = list(primera_lectura)
-
-
         for i in range(0,len(primeros_caracteres)):
             if str(primeros_caracteres[i]) != '\n' and str(primeros_caracteres[i]) != '\t':
-                cache = cache + str(primeros_caracteres[i])
-            if str(primeros_caracteres[i]) == '\n' or str(primeros_caracteres[i]==''):
+                if str(primeros_caracteres[i]) != ' ':
+                    #
+                    cache = cache + str(primeros_caracteres[i])
+            elif str(primeros_caracteres[i]) == '\n' or str(primeros_caracteres[i]==''):
+
+
                 primeras_lineas.append(cache)
                 cache = ''
-
+        print('primeras lineas',primeras_lineas)
         return primeras_lineas
 def Analizar():
     #try:
@@ -48,6 +52,8 @@ def Analizar():
     print(dir)
     primeras_lineas = Abrir_Archivo(dir)
     AFD(primeras_lineas)
+
+    AFD_ERRORES(primeras_lineas)
     #except:
         #tkinter.messagebox.showwarning('ERROR','Aun no hay una ruta para analizar ')
 def AFD(lista_lineas):
@@ -526,7 +532,8 @@ def Filtro2(lista_2D):
             pixelRefinado = pixelRefinado +  str(quitarCaracterFinal[j])
 
         print('Crear HTML')
-        FSalidaH = open('HTML y CSS/'+nombre+'.html','w')
+        dir = 'HTML y CSS/'+nombre
+        FSalidaH = open(dir+'.html','w')
         contenidoH = '''<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -543,22 +550,44 @@ def Filtro2(lista_2D):
         FSalidaH.write(contenidoH)
         FSalidaH.close()
 
-        FSalidaC = open('HTML y CSS/'+nombre+'.css','w')
+        FSalidaC = open(dir+'.css','w')
         contenidoC = '''body {
   background-color: white;
 }
 
 .pixel-art {
-  '''+'width:'+str(tamañoXpixel)+'px;'+ 'height:' +str(tamañoYpixel)+'px;'+'margin: 50px;transform: scale(1);box-shadow:'+pixelRefinado
+  '''+'width:'+str(tamañoXpixel)+'px;'+ 'height:' +str(tamañoYpixel)+'px;'+'margin: 0px;transform: scale(1);box-shadow:'+pixelRefinado
         FSalidaC.write(contenidoC)
         FSalidaC.close()
 
-        imgkit.from_file('HTML y CSS/Pokebola.html','out.jpg')
+        htmli = dir+'.html'
+        cssi = dir+'.css'
+        print(htmli)
+        print(cssi)
+        hti = Html2Image()
+        hti.output_path = 'Imagenes'
+        hti.screenshot(
+            html_file=htmli, css_file=cssi,
+            size=(Tx+14,Ty+14),
+            save_as=nombre+'.jpg')
+        print('creando Imagen'+nombre)
 
         listaCelda2D = []
 
+    #carpeta = os.listdir('HTML y CSS')
+    #htmli = []
+    #for fichero in carpeta:
+    #    if os.path.isfile(os.path.join('HTML y CSS', fichero)) and fichero.endswith('.html'):
+    #        htmli.append(fichero)
+    #print(htmli)
+
+    #for con in range(0,len(htmli)):
+    #    print(htmli[con])
+        #crearimagen = imgkit.from_url('HTML Y CSS/'+str(htmli[con])+'.html', 'Imagenes/'+str(htmli[con])+'.jpg')
 
 
+
+    #for imagenes in carpeta:
 
 
 
