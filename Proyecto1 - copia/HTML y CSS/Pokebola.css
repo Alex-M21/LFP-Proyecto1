@@ -1,0 +1,6 @@
+body {
+  background-color: white;
+}
+
+.pixel-art {
+  width:25px;height:25px;margin: 0px;transform: scale(1);box-shadow: 75px 100px #000000, 75px 125px #000000, 75px 150px #000000, 75px 175px #000000}
