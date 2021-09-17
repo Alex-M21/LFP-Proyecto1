@@ -4,7 +4,6 @@ from tkinter import filedialog
 import os
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import imgkit
 from html2image import Html2Image
 from AFDERRORES import *
 
