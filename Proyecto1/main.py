@@ -6,6 +6,8 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from html2image import Html2Image
 from AFDERRORES import *
+import sys
+import webbrowser
 
 #Variables Globales
 ruta = ''
@@ -19,12 +21,16 @@ def Cargar_Archivo():
 def Abrir_Archivo(Direccion):
     Dir = str(Direccion)
     primeras_lineas = []
+    primeras_lineas_error =[]
     cache = ''
+    cache2 = ''
+    cache3 = ''
     print('Abriendo Archivo para lectura')
     try:
         file_entrada = open(Dir,'r')
         primera_lectura = file_entrada.read()
-        ##print(primera_lectura)
+
+        #print(primera_lectura)
     except:
         print('Error al intentar abrir el archivo')
         messagebox.showwarning(message="ERROR al intentar abrir archivo de entrada ", title="ERROR")
@@ -32,27 +38,48 @@ def Abrir_Archivo(Direccion):
         print('Se logro abrir archivo de entrada con exito')
         messagebox.showinfo(message="Se logro abrir el archivo de entrada", title="CONFIRMACION")
         primeros_caracteres = list(primera_lectura)
+        #print(primeros_caracteres)
+        # PARA AFD
         for i in range(0,len(primeros_caracteres)):
             if str(primeros_caracteres[i]) != '\n' and str(primeros_caracteres[i]) != '\t':
                 if str(primeros_caracteres[i]) != ' ':
-                    #
                     cache = cache + str(primeros_caracteres[i])
-            elif str(primeros_caracteres[i]) == '\n' or str(primeros_caracteres[i]==''):
-
-
+            if str(primeros_caracteres[i]) == '\n' or str(primeros_caracteres[i]==''):
                 primeras_lineas.append(cache)
                 cache = ''
-        print('primeras lineas',primeras_lineas)
-        return primeras_lineas
+        #PARA AFD2
+        for j in range(0, len(primeros_caracteres)):
+            if str(primeros_caracteres[j]) != '' and str(primeros_caracteres[j]) != '\t':
+                if str(primeros_caracteres[j]) != ' ':
+                    cache2 = cache2 + str(primeros_caracteres[j])
+        cache2 = cache2 + '$'
+        filtrar_lineas = list(cache2)
+
+        for k in range(0,len(filtrar_lineas)):
+            if str(filtrar_lineas[k]) != '\n' and str(filtrar_lineas[k]) != '$':
+                cache3 = cache3 + str(filtrar_lineas[k])
+            if str(filtrar_lineas[k]) == '\n' or str(filtrar_lineas[k]) == '$':
+                primeras_lineas_error.append(cache3)
+                cache3 = ''
+        #print('lista e', primeras_lineas_error)
+
+
+
+
+
+        #print('primeras lineas',primeras_lineas)
+        return primeras_lineas_error
 def Analizar():
     #try:
     dir = ruta
     print('Se analizara el archivo')
     print(dir)
     primeras_lineas = Abrir_Archivo(dir)
+    AFD_ERRORES(primeras_lineas)
     AFD(primeras_lineas)
 
-    AFD_ERRORES(primeras_lineas)
+
+
     #except:
         #tkinter.messagebox.showwarning('ERROR','Aun no hay una ruta para analizar ')
 def AFD(lista_lineas):
@@ -68,8 +95,8 @@ def AFD(lista_lineas):
         CrearUnaLinea = CrearUnaLinea + str(lista_lineas[h])
     CrearUnaLinea = CrearUnaLinea + '$'
     LineaUnica = list(CrearUnaLinea)
-    print('Conjunto de Caracteres:',end='\n')
-    print(LineaUnica)
+    #print('Conjunto de Caracteres:',end='\n')
+    #print(LineaUnica)
 
     # Estados
     estado = 0
@@ -452,11 +479,14 @@ def Filtro2(lista_2D):
     #fila,columna,valicion,color
     listaCelda = ['','','','']
     listaCelda2D =[]
+    lst1 = []
+    lst2 = []
     state = 0
     cacheF=''
     cacheC=''
     cacheV =''
     cacheCol = ''
+    tamañoI = ''
     for i in range(0,len(lista_2D)):
         nombre = str(lista_2D[i][0])
         Tx = int(lista_2D[i][1])
@@ -465,8 +495,11 @@ def Filtro2(lista_2D):
         NF = int(lista_2D[i][4])
         tamañoXpixel = int(Tx/NC)
         tamañoYpixel = int(Ty/NF)
+        tamañoI = str(Tx)+'x'+str(Ty)
 
-        print(tamañoXpixel,',',tamañoYpixel)
+
+
+        #print(tamañoXpixel,',',tamañoYpixel)
 
 
         celda = str(lista_2D[i][5])
@@ -515,7 +548,19 @@ def Filtro2(lista_2D):
                     cacheCol = ''
                     listaCelda = ['','','','']
                     state = 0
-        #print(listaCelda2D)
+
+
+
+
+
+
+
+
+
+
+
+        #
+        print(listaCelda2D)
         print('esta es la imagen', i)
         pixel = ''
         for l in range(0,len(listaCelda2D)):
@@ -543,7 +588,9 @@ def Filtro2(lista_2D):
   <link rel="stylesheet" href="'''+nombre+'''.css">
 </head>
 <body>
+<div>'''+tamañoI+'''</div>
   <div class="pixel-art"></div>
+  
 </body>
 </html>'''
         FSalidaH.write(contenidoH)
@@ -567,36 +614,11 @@ def Filtro2(lista_2D):
         hti.output_path = 'Imagenes'
         hti.screenshot(
             html_file=htmli, css_file=cssi,
-            size=(Tx+14,Ty+14),
+            size=(Tx+14,Ty+34),
             save_as=nombre+'.jpg')
         print('creando Imagen'+nombre)
 
         listaCelda2D = []
-
-    #carpeta = os.listdir('HTML y CSS')
-    #htmli = []
-    #for fichero in carpeta:
-    #    if os.path.isfile(os.path.join('HTML y CSS', fichero)) and fichero.endswith('.html'):
-    #        htmli.append(fichero)
-    #print(htmli)
-
-    #for con in range(0,len(htmli)):
-    #    print(htmli[con])
-        #crearimagen = imgkit.from_url('HTML Y CSS/'+str(htmli[con])+'.html', 'Imagenes/'+str(htmli[con])+'.jpg')
-
-
-
-    #for imagenes in carpeta:
-
-
-
-
-
-
-
-
-
-
 def Abrir():
     new = Toplevel(window)
     new.geometry("350x350")
@@ -639,8 +661,9 @@ def Ver_Imagen():
     except:
         print('Error en funcion select no ha seleccionado ninguna imagen')
         tkinter.messagebox.showwarning('ERROR', 'En funcion select no ha seleccionado ninguna imagen')
-
-
+def Ver_Reportes():
+    webbrowser.open_new_tab('ReportesHTML\Reporte_Errores.html')
+    webbrowser.open_new_tab('ReportesHTML\Reporte_Tokens.html')
 if __name__ == '__main__':
 
     print('generano interfaz Bitxelart')
@@ -670,9 +693,11 @@ if __name__ == '__main__':
     seleccionar = tkinter.Menu(menubar)
     menubar.add_cascade(label='Seleccionar Imagen', command=Abrir)
     # Ver imagen
-    ver = tkinter.Menu(menubar)
-    menubar.add_cascade(label='Ver Imagen', command=Ver_Imagen)
 
+    menubar.add_cascade(label='Ver Imagen', command=Ver_Imagen)
+    repo = tkinter.Menu(menubar)
+    menubar.add_cascade(label='Reportes', command=Ver_Reportes)
+    repo = tkinter.Menu(menubar)
     # Crear Salir items
     reportesmenu = tkinter.Menu(menubar)
     # Creamos Salir item

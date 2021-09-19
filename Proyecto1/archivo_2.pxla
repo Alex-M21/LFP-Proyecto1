@@ -130,4 +130,4 @@ TITULO="Hongo";
 			[5,5,TRUE,#00FF00],
 			[10,5,TRUE,#00FF00]
 		};
-        FILTROS = MIRRORX;
+        FILTROS <= MIRRORX;

@@ -1,3 +1,4 @@
+from CrearHTMLReportes import *
 def validarNumero(caracter):
     correcto = False
     try:
@@ -11,6 +12,7 @@ def AFD_ERRORES(lista_lineas):
     print('Iniciando Automata ERRORES')
 
     lista_lineas = lista_lineas
+
     tokensPrincipal = ''
     tokens = ['','','']
     listadetokens = []
@@ -45,7 +47,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoNombre == 0:
                 if str(separarLineas[separacion]) == 'T':
                     estadoNombre = 1
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[separacion])
+
                 else:
                     estadoNombre = 0
 
@@ -53,7 +55,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoNombre == 1:
                 if str(separarLineas[separacion]) == 'I':
                     estadoNombre = 2
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[separacion])
+
                 else:
                     estadoNombre = 0
 
@@ -61,7 +63,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoNombre == 2:
                 if str(separarLineas[separacion]) == 'T':
                     estadoNombre = 3
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[separacion])
+
                 else:
                     estadoNombre = 0
 
@@ -69,7 +71,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoNombre == 3:
                 if str(separarLineas[separacion]) == 'U':
                     estadoNombre = 4
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[separacion])
+
                 else:
                     estadoNombre = 0
 
@@ -77,7 +79,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoNombre == 4:
                 if str( separarLineas[separacion]) == 'L':
                     estadoNombre = 5
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[separacion])
+
                 else:
                     estadoNombre = 0
 
@@ -85,20 +87,19 @@ def AFD_ERRORES(lista_lineas):
             if estadoNombre == 5:
                 if str(separarLineas[separacion]) == 'O':
                     estadoNombre = 6
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[separacion])
-                    tokens[0] = str(tokensPrincipal)
+
+                    tokens[0] = 'TITULO'
                     tokens[1] = 'titulo'
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens=['','','']
                 else:
                     estadoNombre = 0
-                    errores.append('Error encontrado token TITULO no encontrado en la linea' + str(lineas))
+                    errores.append('Error token TITULO no encontrado en columna '+str(separacion)+ 'y  la linea' + str(lineas))
                 continue
             if estadoNombre == 6:
                 if str(separarLineas[separacion]) == '=':
                     estadoNombre = 7
-
                     tokens[0] = '='
                     tokens[1] = 'signo'
                     tokens[2] = lineas
@@ -106,7 +107,8 @@ def AFD_ERRORES(lista_lineas):
                     tokens = ['', '', '']
                 else:
                     estadoNombre = 0
-                    errores.append('Error encontrado'+str(separarLineas[separacion])+' en la linea'+str(lineas))
+                    errores.append('Error encontrado ' + str(separarLineas[separacion]) + ' en la columna' + str(
+                        separacion) + ' en la linea' + str(lineas))
                 continue
             if estadoNombre == 7:
                 if str( separarLineas[separacion]) == '"':
@@ -119,7 +121,8 @@ def AFD_ERRORES(lista_lineas):
                     tokens = ['', '', '']
                 else:
                     estadoNombre = 0
-                    errores.append('Error encontrado ' + str(separarLineas[separacion]) + ' en la linea' + str(lineas))
+                    errores.append('Error encontrado' + str(separarLineas[separacion]) + 'en la columna' + str(
+                        separacion) + ' en la linea' + str(lineas))
 
                 continue
             if estadoNombre == 8:
@@ -127,7 +130,7 @@ def AFD_ERRORES(lista_lineas):
                     cacheNombre = cacheNombre + str( separarLineas[separacion])
                     estadoNombre = 8
 
-                elif str( separarLineas[separacion]) == '"':
+                if str( separarLineas[separacion]) == '"':
                     estadoNombre = 9
 
                     tokens[0] = cacheNombre
@@ -145,12 +148,10 @@ def AFD_ERRORES(lista_lineas):
 
                     tokensPrincipal = ''
 
-
                 continue
             if estadoNombre == 9:
                 if str( separarLineas[separacion]) == ';':
                     cacheNombre = ''
-
                     tokens[0] = ';'
                     tokens[1] = 'signo'
                     tokens[2] = lineas
@@ -158,21 +159,21 @@ def AFD_ERRORES(lista_lineas):
                     tokens = ['', '', '']
                     estadoNombre = 0
                 else:
-                    estadoNombre = 0
-                    errores.append('Error encontrado ' + str(separarLineas[separacion]) + ' en la linea' + str(lineas))
+                    errores.append('Error encontrado ' + str(separarLineas[separacion]) + ' en la columna ' + str(
+                        separacion) + ' en la linea ' + str(lineas))
                 continue
         for ancho in range(0, len(separarLineas)):
             if estadoAncho == 0:
                 if str(separarLineas[ancho]) == 'A':
                     estadoAncho = 1
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[ancho])
+
                 else:
                     estadoAncho = 0
                 continue
             if estadoAncho == 1:
                 if str(separarLineas[ancho]) == 'N':
                     estadoAncho = 2
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[ancho])
+
                 else:
                     estadoAncho = 0
 
@@ -180,24 +181,24 @@ def AFD_ERRORES(lista_lineas):
             if estadoAncho == 2:
                 if str(separarLineas[ancho]) == 'C':
                     estadoAncho = 3
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[ancho])
+
                 else:
                     estadoAncho = 0
                 continue
             if estadoAncho == 3:
                 if str(separarLineas[ancho]) == 'H':
                     estadoAncho = 4
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[ancho])
+
                 else:
                     estadoAncho = 0
                 continue
             if estadoAncho == 4:
                 if str(separarLineas[ancho]) == 'O':
                     estadoAncho = 5
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[ancho])
+
                 else:
                     estadoAncho = 0
-                    errores.append('Error encontrado token ANCHO no encontrado')
+                    errores.append('Error token ANCHO no encontrado en columna '+str(ancho)+ '  y  la linea  ' + str(lineas))
 
                 continue
             if estadoAncho == 5:
@@ -216,13 +217,13 @@ def AFD_ERRORES(lista_lineas):
                     tokens = ['', '', '']
                     tokensPrincipal = ''
                 else:
-                    errores.append('Error encontrado ' + str(separarLineas[separacion]) + ' en la linea' + str(lineas))
+                    errores.append('Error encontrado  ' + str(separarLineas[ancho]) +'  en la columna  '+str(ancho)+ ' en la linea  ' + str(lineas))
                 continue
             if estadoAncho == 6:
                 if str(separarLineas[ancho]) != ';':
                     estadoAncho = 6
                     cacheAncho = cacheAncho + str(separarLineas[ancho])
-                elif str(separarLineas[ancho]) == ';':
+                if str(separarLineas[ancho]) == ';':
                     tokens[0] = cacheAncho
                     tokens[1] = 'cadena'
                     tokens[2] = lineas
@@ -235,15 +236,14 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     estadoAncho = 0
-                else:
-                    estadoAncho = 0
+
                     cacheAncho = ''
 
         for alto in range(0, len(separarLineas)):
             if estadoAlto == 0:
                 if str(separarLineas[alto]) == 'A':
                     estadoAlto = 1
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[alto])
+
                 else:
                     estadoAlto = 0
                     tokensPrincipal = ''
@@ -251,7 +251,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoAlto == 1:
                 if str(separarLineas[alto]) == 'L':
                     estadoAlto = 2
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[alto])
+
                 else:
                     estadoAlto = 0
                     tokensPrincipal = ''
@@ -260,7 +260,7 @@ def AFD_ERRORES(lista_lineas):
             if estadoAlto == 2:
                 if str(separarLineas[alto]) == 'T':
                     estadoAlto = 3
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[alto])
+
                 else:
                     estadoAlto = 0
                     tokensPrincipal = ''
@@ -268,9 +268,10 @@ def AFD_ERRORES(lista_lineas):
             if estadoAlto == 3:
                 if str(separarLineas[alto]) == 'O':
                     estadoAlto = 4
-                    tokensPrincipal = tokensPrincipal + str(separarLineas[alto])
+
                 else:
                     estadoAlto = 0
+                    errores.append('Error token ALTO no encontrado en columna ' + str(alto) + 'y  la linea' + str(lineas))
                     tokensPrincipal = ''
                 continue
             if estadoAlto == 4:
@@ -288,6 +289,7 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                 else:
+                    errores.append('Error encontrado' + str(separarLineas[alto]) +'en la columna'+str(alto)+ ' en la linea' + str(lineas))
                     estadoAlto = 0
 
                 continue
@@ -338,6 +340,9 @@ def AFD_ERRORES(lista_lineas):
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
+                else:
+                    errores.append(
+                        'Error token FILAS no encontrado en columna ' + str(filas) + 'y  la linea' + str(lineas))
                 continue
             if estadoFilas == 5:
                 if str(separarLineas[filas]) == '=':
@@ -347,6 +352,9 @@ def AFD_ERRORES(lista_lineas):
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
+                else:
+                    errores.append('Error encontrado' + str(separarLineas[filas]) + 'en la columna' + str(
+                        filas) + ' en la linea' + str(lineas))
                 continue
             if estadoFilas == 6:
                 if str(separarLineas[filas]) != ';':
@@ -370,38 +378,55 @@ def AFD_ERRORES(lista_lineas):
             if estadoColumna == 0:
                 if str(separarLineas[columnas]) == 'C':
                     estadoColumna = 1
+                else:
+                    estadoColumna = 0
 
                 continue
             if estadoColumna == 1:
                 if str(separarLineas[columnas]) == 'O':
                     estadoColumna = 2
+                else:
+                    estadoColumna = 0
                 continue
             if estadoColumna == 2:
                 if str(separarLineas[columnas]) == 'L':
                     estadoColumna = 3
+                else:
+                    estadoColumna = 0
                 continue
             if estadoColumna == 3:
                 if str(separarLineas[columnas]) == 'U':
                     estadoColumna = 4
+                else:
+                    estadoColumna = 0
                 continue
             if estadoColumna == 4:
                 if str(separarLineas[columnas]) == 'M':
                     estadoColumna = 5
+                else:
+                    estadoColumna = 0
 
                 continue
             if estadoColumna == 5:
                 if str(separarLineas[columnas]) == 'N':
                     estadoColumna = 6
+                else:
+                    estadoColumna = 0
 
                 continue
             if estadoColumna == 6:
                 if str(separarLineas[columnas]) == 'A':
                     estadoColumna = 7
+                else:
+                    estadoColumna = 0
 
                 continue
             if estadoColumna == 7:
                 if str(separarLineas[columnas]) == 'S':
                     estadoColumna = 8
+                else:
+                    estadoColumna = 0
+                    errores.append('Error token COLUMNAS no encontrado en columna ' + str(columnas) + 'y  la linea' + str(lineas))
 
                 continue
             if estadoColumna == 8:
@@ -417,6 +442,9 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     estadoColumna = 9
+                else:
+                    errores.append('Error encontrado' + str(separarLineas[columnas]) + 'en la columna' + str(
+                    columnas) + ' en la linea' + str(lineas))
 
                 continue
             if estadoColumna == 9:
@@ -442,30 +470,42 @@ def AFD_ERRORES(lista_lineas):
             if estadoCelda == 0:
                 if str(separarLineas[celda]) == 'C':
                     estadoCelda = 1
+                else:
+                    estadoCelda = 0
                 continue
             if estadoCelda == 1:
                 if str(separarLineas[celda]) == 'E':
                     estadoCelda = 2
+                else:
+                    estadoCelda = 0
                 continue
             if estadoCelda == 2:
                 if str(separarLineas[celda]) == 'L':
                     estadoCelda = 3
+                else:
+                    estadoCelda = 0
                 continue
             if estadoCelda == 3:
                 if str(separarLineas[celda]) == 'D':
                     estadoCelda = 4
+                else:
+                    estadoCelda = 0
                 continue
             if estadoCelda == 4:
                 if str(separarLineas[celda]) == 'A':
                     estadoCelda = 5
+                else:
+                    estadoCelda = 0
                 continue
             if estadoCelda == 5:
                 if str(separarLineas[celda]) == 'S':
                     estadoCelda = 6
+                else:
+                    errores.append('Error token CELDAS no encontrado en columna ' + str(columnas) + 'y  la linea' + str(lineas))
+                    estadoCelda = 0
                 continue
             if estadoCelda == 6:
-                if str(separarLineas[celda]) == ' ':
-                    estadoCelda = 6
+
                 if str(separarLineas[celda]) == '=':
                     estadoCelda = 7
                     tokens[0] = 'CELDAS'
@@ -478,10 +518,11 @@ def AFD_ERRORES(lista_lineas):
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
+                else:
+                    errores.append('Error encontrado' + str(separarLineas[celda]) + 'en la columna' + str(
+                        celda) + ' en la linea' + str(lineas))
                 continue
             if estadoCelda == 7:
-                if str(separarLineas[celda]) == ' ':
-                    estadoCelda = 7
                 if str(separarLineas[celda]) == '{':
                     tokens[0] = '{'
                     tokens[1] = 'agrupacion'
@@ -489,6 +530,9 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     estadoCelda = 0
+                else:
+                    errores.append('Error encontrado' + str(separarLineas[celda]) + 'en la columna' + str(
+                        celda) + ' en la linea' + str(lineas))
 
 
         for matriz in range(0, len(separarLineas)):
@@ -500,6 +544,9 @@ def AFD_ERRORES(lista_lineas):
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
+                else:
+                    errores.append('Error encontrado' + str(separarLineas[celda]) + 'en la columna' + str(
+                        celda) + ' en la linea' + str(lineas))
                 continue
             if estadoImagen == 1:
                 if separarLineas[matriz] != ',':
@@ -518,6 +565,7 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     estadoImagen = 2
+
                 continue
             if estadoImagen == 2:
                 if separarLineas[matriz] != ',':
@@ -536,6 +584,7 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     estadoImagen = 3
+
                 continue
             if estadoImagen == 3:
                 if separarLineas[matriz] != ',':
@@ -581,41 +630,57 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     estadoImagen = 0
-                continue
+
 
         for filtro in range(0, len(separarLineas)):
             if estadoFiltro == 0:
                 if str(separarLineas[filtro]) == 'F':
                     estadoFiltro = 1
+                else:
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 1:
                 if str(separarLineas[filtro]) == 'I':
                     estadoFiltro = 2
+                else:
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 2:
                 if str(separarLineas[filtro]) == 'L':
                     estadoFiltro = 3
+                else:
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 3:
                 if str(separarLineas[filtro]) == 'T':
                     estadoFiltro = 4
+                else:
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 4:
                 if str(separarLineas[filtro]) == 'R':
                     estadoFiltro = 5
+                else:
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 5:
                 if str(separarLineas[filtro]) == 'O':
                     estadoFiltro = 6
+                else:
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 6:
                 if str(separarLineas[filtro]) == 'S':
                     estadoFiltro = 7
-
+                else:
+                    errores.append(
+                        'Error token FILTROS no encontrado en columna ' + str(columnas) + 'y  la linea' + str(lineas))
+                    estadoFiltro = 0
                 continue
             if estadoFiltro == 7:
                 if str(separarLineas[filtro]) == ' ':
                     estadoFiltro = 7
+
                 if str(separarLineas[filtro]) == '=':
                     estadoFiltro = 8
                     tokens[0] = 'FILTROS'
@@ -630,39 +695,39 @@ def AFD_ERRORES(lista_lineas):
                     tokens = ['', '', '']
                 continue
             if estadoFiltro == 8:
-                if str(separarLineas[filtro]) == ' ':
-                    estadoFiltro = 8
-                if str(separarLineas[filtro]) != ',':
-                    estadoFiltro = 8
+
+                if str(separarLineas[filtro]) != ','or str(separarLineas[filtro]) != ';':
                     cacheFiltro = cacheFiltro + str(separarLineas[filtro])
-                if str(separarLineas[filtro]) == ',':
+                    estadoFiltro = 8
+                if str(separarLineas[filtro]) == ',' or str(separarLineas[filtro]) == ';':
                     tokens[0] = cacheFiltro
                     tokens[1] = 'cadena'
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
-                    tokens[0] = ','
+                    if str(separarLineas[filtro]) == ',':
+                          tokens[0] = ','
+                    else:
+                        tokens[0] = ';'
+
                     tokens[1] = 'signo'
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     cacheFiltro = ''
-                    estadoFiltro = 8
-                if str(separarLineas[filtro]) == ';':
-                    tokens[0] = ';'
-                    tokens[1] = 'signo'
-                    tokens[2] = lineas
-                    listadetokens.append(tokens)
-                    tokens = ['', '', '']
                     estadoFiltro = 0
-                continue
 
 
 
 
 
-    print(listadetokens)
-    print(errores)
+
+
+
+
+    Reporte_Tokens(listadetokens)
+    Reporte_Errores(errores)
+
 
 
 

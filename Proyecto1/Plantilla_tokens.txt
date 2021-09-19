@@ -1,0 +1,5 @@
+<tr>
+   <th scope="col"class="text-center" >$token</th>
+   <th scope="col"class="text-center">$lexema</th>
+   <th scope="col"class="text-center">$linea</th>
+</tr>

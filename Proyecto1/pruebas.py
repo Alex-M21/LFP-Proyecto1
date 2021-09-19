@@ -21,9 +21,6 @@
 
 #)
 
-import cv2
-nombre = 'jade'
-direccion = 'Imagenes/'+nombre+'jpg'
-img = cv2.imread('Imagenes/Cara')
+
 
 

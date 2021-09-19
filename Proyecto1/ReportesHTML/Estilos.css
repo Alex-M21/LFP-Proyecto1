@@ -1,0 +1,17 @@
+.header{
+    width: 100%;
+    min-height: 100vh;
+    background-image: url(fondo.jpg);
+    background-repeat: no-repeat;
+    background-position:center;
+    background-size: cover;
+    background-attachment: fixed;
+
+}
+h1{
+    color: #FFFFFF;
+
+}
+h4{
+    color: darkgray;
+}
