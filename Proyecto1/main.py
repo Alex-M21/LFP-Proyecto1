@@ -479,11 +479,12 @@ def Filtro2(lista_2D):
     #fila,columna,valicion,color
     listaCelda = ['','','','']
     listaCelda2D =[]
-    lst1 = []
-    lst2 = []
+
     state = 0
     cacheF=''
     cacheC=''
+    cacheFpixel = ''
+    cacheCpixel = ''
     cacheV =''
     cacheCol = ''
     tamañoI = ''
@@ -493,14 +494,21 @@ def Filtro2(lista_2D):
         Ty = int(lista_2D[i][2])
         NC = int(lista_2D[i][3])
         NF = int(lista_2D[i][4])
+        filtrosSucios =str(lista_2D[i][6])
         tamañoXpixel = int(Tx/NC)
         tamañoYpixel = int(Ty/NF)
         tamañoI = str(Tx)+'x'+str(Ty)
+        lista1 = []
+        lista2 = []
+        tamañoF = NF
+        tamañoC = NC
 
-
-
-        #print(tamañoXpixel,',',tamañoYpixel)
-
+        for artificial1 in range(0, tamañoF):
+            for artificial2 in range(0, tamañoC):
+                lista1.append('')
+            lista2.append(lista1)
+            lista1 = []
+        print(lista2)
 
         celda = str(lista_2D[i][5])
         cadenaCelda = list(celda)
@@ -513,17 +521,20 @@ def Filtro2(lista_2D):
                 if str(cadenaCelda[letra]) != ',':
                     state =1
                     cacheF = cacheF + str(cadenaCelda[letra])
+                    cacheFpixel = cacheFpixel + str(cadenaCelda[letra])
                 if str(cadenaCelda[letra]) == ',':
                     state = 2
-                    listaCelda[0]=int(cacheF)*tamañoXpixel
+                    listaCelda[0]=int(cacheFpixel)*tamañoXpixel
+
                 continue
             if state == 2:
                 if str(cadenaCelda[letra]) != ',':
                     cacheC = cacheC + str(cadenaCelda[letra])
+                    cacheCpixel = cacheCpixel + str(cadenaCelda[letra])
                     state = 2
                 if str(cadenaCelda[letra]) == ',':
                     state = 3
-                    listaCelda[1] = int(cacheC)*tamañoYpixel
+                    listaCelda[1] = int(cacheCpixel)*tamañoYpixel
                 continue
             if state == 3:
                 if str(cadenaCelda[letra]) != ',':
@@ -541,84 +552,352 @@ def Filtro2(lista_2D):
                 if str(cadenaCelda[letra]) == ']':
                     listaCelda[3]=cacheCol
                     print(listaCelda)
-                    listaCelda2D.append(listaCelda)
+                    #listaCelda2D.append(listaCelda)
+                    color = ''
+
+                    if listaCelda[2] == 'TRUE':
+                         color = str(listaCelda[3])
+
+
+
+                    lista2[int(cacheF)][int(cacheC)] = color
+
+
+
                     cacheF = ''
+                    cacheFpixel = ''
                     cacheC = ''
+                    cacheCpixel = ''
                     cacheV = ''
                     cacheCol = ''
                     listaCelda = ['','','','']
                     state = 0
 
 
-
-
-
-
-
-
-
-
-
-        #
-        print(listaCelda2D)
         print('esta es la imagen', i)
+
         pixel = ''
-        for l in range(0,len(listaCelda2D)):
-            if str(listaCelda2D[l][2]) == 'TRUE':
-                #if l <= len(listaCelda2D)-2:
-                pixel = pixel + ' ' + str(listaCelda2D[l][0])+'px '+str(listaCelda2D[l][1])+'px '+str(listaCelda2D[l][3])+','
+        for xi in range(0,tamañoF):
+            for yi in range(0,tamañoC):
+                if str(lista2[xi][yi]) != '':
+                    pixel = pixel + ' ' + str(xi * int(tamañoXpixel)) + 'px ' + str(
+                        yi * int(tamañoYpixel)) + 'px ' + str(lista2[xi][yi]) + ','
+                else:
+                    pixel = pixel + ' ' + str(xi * int(tamañoXpixel)) + 'px ' + str(
+                        yi * int(tamañoYpixel)) + 'px ' + '#FFFFFF' + ','
 
         quitarCaracterFinal = list(pixel)
         Tcadena = len(quitarCaracterFinal)
-        quitarCaracterFinal[Tcadena-1] = '}'
+        quitarCaracterFinal[Tcadena - 1] = '}'
         pixelRefinado = ''
-        for j in range(0,len(quitarCaracterFinal)):
-            pixelRefinado = pixelRefinado +  str(quitarCaracterFinal[j])
+        for j in range(0, len(quitarCaracterFinal)):
+            pixelRefinado = pixelRefinado + str(quitarCaracterFinal[j])
 
         print('Crear HTML')
-        dir = 'HTML y CSS/'+nombre
-        FSalidaH = open(dir+'.html','w')
+        dir = 'HTML y CSS/' + nombre
+        FSalidaH = open(dir + '.html', 'w')
         contenidoH = '''<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>'''+nombre+'''</title>
-  <link rel="stylesheet" href="'''+nombre+'''.css">
-</head>
-<body>
-<div>'''+tamañoI+'''</div>
-  <div class="pixel-art"></div>
-  
-</body>
-</html>'''
+                        <html lang="es">
+                        <head>
+                          <meta charset="UTF-8">
+                          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                          <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                          <title>''' + nombre + '''</title>
+                          <link rel="stylesheet" href="''' + nombre + '''.css">
+                        </head>
+                        <body>
+                        <div>''' + tamañoI + '''</div>
+                          <div class="pixel-art"></div>
+
+                        </body>
+                        </html>'''
         FSalidaH.write(contenidoH)
         FSalidaH.close()
 
-        FSalidaC = open(dir+'.css','w')
+        FSalidaC = open(dir + '.css', 'w')
         contenidoC = '''body {
-  background-color: white;
-}
+                          background-color: white;
+                        }
 
-.pixel-art {
-  '''+'width:'+str(tamañoXpixel)+'px;'+ 'height:' +str(tamañoYpixel)+'px;'+'margin: 0px;transform: scale(1);box-shadow:'+pixelRefinado
+                        .pixel-art {
+                          ''' + 'width:' + str(tamañoXpixel) + 'px;' + 'height:' + str(
+            tamañoYpixel) + 'px;' + 'margin: 0px;transform: scale(1);box-shadow:' + pixelRefinado
         FSalidaC.write(contenidoC)
         FSalidaC.close()
 
-        htmli = dir+'.html'
-        cssi = dir+'.css'
+        htmli = dir + '.html'
+        cssi = dir + '.css'
         print(htmli)
         print(cssi)
         hti = Html2Image()
         hti.output_path = 'Imagenes'
         hti.screenshot(
             html_file=htmli, css_file=cssi,
-            size=(Tx+14,Ty+34),
-            save_as=nombre+'.jpg')
-        print('creando Imagen'+nombre)
+            size=(Tx + 14, Ty + 34),
+            save_as=nombre+ '.jpg')
+        print('creando Imagen' + nombre)
+        htmli = dir + '.html'
+        cssi = dir + '.css'
+        print(htmli)
+        print(cssi)
+        hti = Html2Image()
+        hti.output_path = 'ImagenesF'
+        hti.screenshot(
+            html_file=htmli, css_file=cssi,
+            size=(Tx + 14, Ty + 34),
+            save_as=nombre + 'Original' +'.jpg')
+        print('creando Imagen' + nombre)
 
-        listaCelda2D = []
+        # Filtros
+        listaF = []
+        cacheF = ''
+        filtrosSucios  = filtrosSucios + '$'
+        print(filtrosSucios)
+        listaFiltro = list(filtrosSucios)
+        for revisar in range(0,len(listaFiltro)):
+            if str(listaFiltro[revisar]) != '$' and str(listaFiltro[revisar]) != ',' :
+                cacheF = cacheF + str(listaFiltro[revisar])
+            elif str(listaFiltro[revisar])==',' or str(listaFiltro[revisar])=='$':
+                listaF.append(cacheF)
+                cacheF = ''
+
+        print('lista Filtros', listaF)
+
+        for f in range(0,len(listaF)):
+            if str(listaF[f]) == 'MIRRORX':
+                print('MIRRORX')
+                listaAux3 = []
+                listaAux4 = []
+                pixelMirrorX = ''
+                #                for oi in range(tamañoF - 1, -1, -1):
+                #    for pi in range(0, tamañoC):
+
+                #
+                for li in range(tamañoF - 1, -1, -1):
+                    for mi in range(0, tamañoC):
+                        listaAux3.append(str(lista2[li][mi]))
+                    listaAux4.append(listaAux3)
+                    listaAux3 = []
+
+                for aux4 in range(0, tamañoF):
+                    for aux5 in range(0, tamañoC):
+                        # print(lista2[aux4][aux5]+'VS'+listaAux4[aux4][aux5])
+                        if str(listaAux4[aux4][aux5]) != '':
+                            pixelMirrorX = pixelMirrorX + str(aux4 * tamañoXpixel) + 'px ' + str(
+                                aux5 * tamañoYpixel) + 'px ' + str(listaAux4[aux4][aux5]) + ','
+                        if str(listaAux4[aux4][aux5]) == '':
+                            pixelMirrorX = pixelMirrorX + str(aux4 * tamañoXpixel) + 'px ' + str(
+                                aux5 * tamañoYpixel) + 'px ' + '#FFFFFF' + ','
+
+                quitarCaracterFinalMirrorX = list(pixelMirrorX)
+                TcadenaMirrorX = len(quitarCaracterFinalMirrorX)
+                quitarCaracterFinalMirrorX[TcadenaMirrorX - 1] = '}'
+                pixelRefinadoMirrorX = ''
+                for jisx in range(0, len(quitarCaracterFinalMirrorX)):
+                    pixelRefinadoMirrorX = pixelRefinadoMirrorX + str(quitarCaracterFinalMirrorX[jisx])
+                # print('NO'+pixelRefinado)
+                # print('Mx '+pixelRefinadoMirrorX)
+
+                print('Crear HTML Mirror X')
+                dirMX = 'Filtros/MirrorX' + nombre
+                FSalidaHMX = open(dirMX + '.html', 'w')
+                contenidoHMX = '''<!DOCTYPE html>
+                                                               <html lang="es">
+                                                               <head>
+                                                                 <meta charset="UTF-8">
+                                                                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                 <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                                                                 <title>''' + nombre + '''</title>
+                                                                 <link rel="stylesheet" href="''' + 'MirrorX' + nombre + '''.css">
+                                                               </head>
+                                                               <body>
+                                                               <div>''' + tamañoI + '''</div>
+                                                                 <div class="pixel-art"></div>
+
+                                                               </body>
+                                                               </html>'''
+                FSalidaHMX.write(contenidoHMX)
+                FSalidaHMX.close()
+
+                FSalidaCMX = open(dirMX + '.css', 'w')
+                contenidoCMX = '''body {
+                                                                 background-color: white;
+                                                               }
+
+                                                               .pixel-art {
+                                                                 ''' + 'width:' + str(
+                    tamañoXpixel) + 'px;' + 'height:' + str(
+                    tamañoYpixel) + 'px;' + 'margin: 0px;transform: scale(1);box-shadow:' + pixelRefinadoMirrorX
+                FSalidaCMX.write(contenidoCMX)
+                FSalidaCMX.close()
+                htmliMX = dirMX + '.html'
+                cssiMX = dirMX + '.css'
+                print(htmliMX)
+                print(cssiMX)
+                htiMX = Html2Image()
+                htiMX.output_path = 'ImagenesF'
+                htiMX.screenshot(
+                    html_file=htmliMX, css_file=cssiMX,
+                    size=(Tx + 14, Ty + 34),
+                    save_as='MirrorX'+nombre + '.jpg')
+                print('creando Imagen' +'MirrorX'+nombre)
+
+            elif str(listaF[f]) == 'MIRRORY':
+                print('MIRRORY')
+                listaAux5 = []
+                listaAux6 = []
+                pixelMirrorY = ''
+                #                for li in range(0, tamañoF):
+                #    for mi in range(tamañoC - 1, -1, -1):
+                for oi in range(0, tamañoF):
+                    for pi in range(tamañoC - 1, -1, -1):
+                        listaAux5.append(str(lista2[oi][pi]))
+                    listaAux6.append(listaAux5)
+                    listaAux5 = []
+
+                for aux5 in range(0, tamañoF):
+                    for aux6 in range(0, tamañoC):
+                        if str(listaAux6[aux5][aux6]) != '':
+                            pixelMirrorY = pixelMirrorY + str(aux5 * tamañoXpixel) + 'px ' + str(
+                                aux6 * tamañoYpixel) + 'px ' + str(listaAux6[aux5][aux6]) + ','
+                        elif str(listaAux6[aux5][aux6]) == '':
+                            pixelMirrorY = pixelMirrorY + str(aux5 * tamañoXpixel) + 'px ' + str(
+                                aux6 * tamañoYpixel) + 'px ' + '#FFFFFF' + ','
+
+                quitarCaracterFinalMirrorY = list(pixelMirrorY)
+                TcadenaMirrorY = len(quitarCaracterFinalMirrorY)
+                quitarCaracterFinalMirrorY[TcadenaMirrorY - 1] = '}'
+                pixelRefinadoMirrorY = ''
+                for jisxz in range(0, len(quitarCaracterFinalMirrorY)):
+                    pixelRefinadoMirrorY = pixelRefinadoMirrorY + str(quitarCaracterFinalMirrorY[jisxz])
+                print(pixelRefinadoMirrorY)
+
+                print('Crear HTML Mirror Y')
+                dirMY = 'Filtros/MirrorY' + nombre
+                FSalidaHMY = open(dirMY + '.html', 'w')
+                contenidoHMY = '''<!DOCTYPE html>
+                                                                       <html lang="es">
+                                                                       <head>
+                                                                         <meta charset="UTF-8">
+                                                                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                                                                         <title>''' + nombre + '''</title>
+                                                                         <link rel="stylesheet" href="''' + 'MirrorY' + nombre + '''.css">
+                                                                       </head>
+                                                                       <body>
+                                                                       <div>''' + tamañoI + '''</div>
+                                                                         <div class="pixel-art"></div>
+
+                                                                       </body>
+                                                                       </html>'''
+                FSalidaHMY.write(contenidoHMY)
+                FSalidaHMY.close()
+
+                FSalidaCMY = open(dirMY + '.css', 'w')
+                contenidoCMY = '''body {
+                                                                         background-color: white;
+                                                                       }
+
+                                                                       .pixel-art {
+                                                                         ''' + 'width:' + str(
+                    tamañoXpixel) + 'px;' + 'height:' + str(
+                    tamañoYpixel) + 'px;' + 'margin: 0px;transform: scale(1);box-shadow:' + pixelRefinadoMirrorY
+                FSalidaCMY.write(contenidoCMY)
+                FSalidaCMY.close()
+                htmliMY = dirMY + '.html'
+                cssiMY = dirMY + '.css'
+                print(htmliMY)
+                print(cssiMY)
+                htiMY = Html2Image()
+                htiMY.output_path = 'ImagenesF'
+                htiMY.screenshot(
+                    html_file=htmliMY, css_file=cssiMY,
+                    size=(Tx + 14, Ty + 34),
+                    save_as='MirrorY' + nombre + '.jpg')
+                print('creando Imagen' + 'MirrorY' + nombre)
+            elif str(listaF[f]) == 'DOUBLEMIRROR':
+                print('DOUBLEMIRROR')
+                listaAuxiliar1 = []
+                listaAuxiliar2 = []
+                pixelDobleMirror = ''
+                for hi in range(tamañoF - 1, -1, -1):
+                    for ki in range(tamañoC - 1, -1, -1):
+                        listaAuxiliar1.append(lista2[hi][ki])
+                    listaAuxiliar2.append(listaAuxiliar1)
+                    listaAuxiliar1 = []
+
+                for auxi in range(0, tamañoF):
+                    for auxj in range(0, tamañoC):
+                        if str(listaAuxiliar2[auxi][auxj]) != '':
+                            pixelDobleMirror = pixelDobleMirror + str(auxi * tamañoXpixel) + 'px ' + str(
+                                auxj * tamañoYpixel) + 'px ' + str(listaAuxiliar2[auxi][auxj]) + ','
+                        elif str(listaAuxiliar2[auxi][auxj]) == '':
+                            pixelDobleMirror = pixelDobleMirror + str(auxi * tamañoXpixel) + 'px ' + str(
+                                auxj * tamañoYpixel) + 'px ' + '#FFFFFF' + ','
+                quitarCaracterFinalDobleMirror = list(pixelDobleMirror)
+                TcadenaDobleMirror = len(quitarCaracterFinalDobleMirror)
+                quitarCaracterFinalDobleMirror[TcadenaDobleMirror - 1] = '}'
+                pixelRefinadoDobleMirror = ''
+                for jis in range(0, len(quitarCaracterFinalDobleMirror)):
+                    pixelRefinadoDobleMirror = pixelRefinadoDobleMirror + str(quitarCaracterFinalDobleMirror[jis])
+                print(pixelRefinadoDobleMirror)
+                print('Crear HTML Doble Mirror')
+                dirDM = 'Filtros/DobleMirror' + nombre
+                FSalidaHDM = open(dirDM + '.html', 'w')
+                contenidoHDM = '''<!DOCTYPE html>
+                                                       <html lang="es">
+                                                       <head>
+                                                         <meta charset="UTF-8">
+                                                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                                                         <title>''' + nombre + '''</title>
+                                                         <link rel="stylesheet" href="''' + 'DobleMirror' + nombre + '''.css">
+                                                       </head>
+                                                       <body>
+                                                       <div>''' + tamañoI + '''</div>
+                                                         <div class="pixel-art"></div>
+
+                                                       </body>
+                                                       </html>'''
+                FSalidaHDM.write(contenidoHDM)
+                FSalidaHDM.close()
+
+                FSalidaCDM = open(dirDM + '.css', 'w')
+                contenidoCDM = '''body {
+                                                         background-color: white;
+                                                       }
+
+                                                       .pixel-art {
+                                                         ''' + 'width:' + str(tamañoXpixel) + 'px;' + 'height:' + str(
+                    tamañoYpixel) + 'px;' + 'margin: 0px;transform: scale(1);box-shadow:' + pixelRefinadoDobleMirror
+                FSalidaCDM.write(contenidoCDM)
+                FSalidaCDM.close()
+                htmliDM = dirDM + '.html'
+                cssiDM = dirDM + '.css'
+                print(htmliDM)
+                print(cssiDM)
+                htiDM = Html2Image()
+                htiDM.output_path = 'ImagenesF'
+                htiDM.screenshot(
+                    html_file=htmliDM, css_file=cssiDM,
+                    size=(Tx + 14, Ty + 34),
+                    save_as='DoubleMirror' + nombre + '.jpg')
+                print('creando Imagen' + 'DoubleMirror' + nombre)
+
+
+
+
+
+
+
+
+
+
+
+
+
+        lista2 = []
+        lista1 = []
 def Abrir():
     new = Toplevel(window)
     new.geometry("350x350")
@@ -664,6 +943,72 @@ def Ver_Imagen():
 def Ver_Reportes():
     webbrowser.open_new_tab('ReportesHTML\Reporte_Errores.html')
     webbrowser.open_new_tab('ReportesHTML\Reporte_Tokens.html')
+def Filtro_Original():
+    print('Original')
+    try:
+        nombreI = ''
+        nombreI = nombreImagen
+        print('Abriendo imagen:', nombreI)
+
+        global imagen
+        imagen = Image.open('ImagenesF/' + nombreI)
+        global photo
+        photo = ImageTk.PhotoImage(imagen)
+        global etiquetaFoto
+        etiquetaFoto = tkinter.Label(window, image=photo).place(x=250, y=50, width=450, height=600)
+    except:
+        print('Error en funcion select no ha seleccionado ninguna imagen')
+        tkinter.messagebox.showwarning('ERROR', 'En funcion select no ha seleccionado ninguna imagen o no se encontro ningun filtro ')
+def Filtro_MirrorX():
+    print('MirrorX')
+    try:
+        nombreI = ''
+        nombreI = nombreImagen
+        print('Abriendo imagen con Filtro MirrorX:', nombreI)
+
+        global imagen
+        imagen = Image.open('ImagenesF/MirrorX' + nombreI)
+        global photo
+        photo = ImageTk.PhotoImage(imagen)
+        global etiquetaFoto
+        etiquetaFoto = tkinter.Label(window, image=photo).place(x=250, y=50, width=450, height=600)
+    except:
+        print('Error en funcion select no ha seleccionado ninguna imagen')
+        tkinter.messagebox.showwarning('ERROR', 'En funcion select no ha seleccionado ninguna imagen o no se encontro ningun filtro ')
+def Filtro_MirrorY():
+    print('MirrorY')
+    try:
+        nombreI = ''
+        nombreI = nombreImagen
+        print('Abriendo imagen con Filtro:', nombreI)
+
+        global imagen
+        imagen = Image.open('ImagenesF/MirrorY' + nombreI)
+        global photo
+        photo = ImageTk.PhotoImage(imagen)
+        global etiquetaFoto
+        etiquetaFoto = tkinter.Label(window, image=photo).place(x=250, y=50, width=450, height=600)
+    except:
+        print('Error en funcion select no ha seleccionado ninguna imagen')
+        tkinter.messagebox.showwarning('ERROR', 'En funcion select no ha seleccionado ninguna imagen o no se encontro ningun filtro ')
+def Filtro_DoubleMirror():
+    print('Double Mirror')
+    try:
+        nombreI = ''
+        nombreI = nombreImagen
+        print('Abriendo imagen con Filtro:', nombreI)
+
+        global imagen
+        imagen = Image.open('ImagenesF/DoubleMirror' + nombreI)
+        global photo
+        photo = ImageTk.PhotoImage(imagen)
+        global etiquetaFoto
+        etiquetaFoto = tkinter.Label(window, image=photo).place(x=250, y=50, width=450, height=600)
+    except:
+        print('Error en funcion select no ha seleccionado ninguna imagen')
+        tkinter.messagebox.showwarning('ERROR', 'En funcion select no ha seleccionado ninguna imagen o no se encontro ningun filtro ')
+
+
 if __name__ == '__main__':
 
     print('generano interfaz Bitxelart')
@@ -704,10 +1049,10 @@ if __name__ == '__main__':
     reportesmenu.add_separator()
     menubar.add_cascade(label='Salir', command=window.quit)
 
-    tkinter.Button(window, text="Original").place(x=25,y=100,width=100,height=30)
-    tkinter.Button(window, text="Mirror X").place(x=25,y=180,width=100,height=30)
-    tkinter.Button(window, text="Mirror Y").place(x=25,y=260,width=100,height=30)
-    tkinter.Button(window, text="Doble Mirror").place(x=25,y=340,width=100,height=30)
+    tkinter.Button(window, text="Original",command =Filtro_Original).place(x=25,y=100,width=100,height=30)
+    tkinter.Button(window, text="Mirror X",command =Filtro_MirrorX).place(x=25,y=180,width=100,height=30)
+    tkinter.Button(window, text="Mirror Y",command =Filtro_MirrorY).place(x=25,y=260,width=100,height=30)
+    tkinter.Button(window, text="Doble Mirror",command =Filtro_DoubleMirror).place(x=25,y=340,width=100,height=30)
 
 
     window.mainloop()

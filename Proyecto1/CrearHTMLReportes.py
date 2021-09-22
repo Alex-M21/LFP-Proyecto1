@@ -172,7 +172,7 @@ def Reporte_Errores(lista1D):
             print('FAllO FATAL No se escribio el archivo salida Tokens .txt')
     print('Creando lista Tokens')
     print('Guardando')
-    file3.close()
+    #file3.close()
 
     print('Creando Reportes')
 

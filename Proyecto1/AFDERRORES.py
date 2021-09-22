@@ -106,7 +106,7 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                 else:
-                    estadoNombre = 0
+
                     errores.append('Error encontrado ' + str(separarLineas[separacion]) + ' en la columna' + str(
                         separacion) + ' en la linea' + str(lineas))
                 continue
@@ -533,6 +533,7 @@ def AFD_ERRORES(lista_lineas):
                 else:
                     errores.append('Error encontrado' + str(separarLineas[celda]) + 'en la columna' + str(
                         celda) + ' en la linea' + str(lineas))
+                continue
 
 
         for matriz in range(0, len(separarLineas)):
@@ -544,9 +545,10 @@ def AFD_ERRORES(lista_lineas):
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
-                else:
-                    errores.append('Error encontrado' + str(separarLineas[celda]) + 'en la columna' + str(
-                        celda) + ' en la linea' + str(lineas))
+                #else:
+
+                #    errores.append('Error encontrado' + str(separarLineas[matriz]) + 'en la columna' + str(
+                #        matriz) + ' en la linea' + str(lineas))
                 continue
             if estadoImagen == 1:
                 if separarLineas[matriz] != ',':
@@ -674,12 +676,10 @@ def AFD_ERRORES(lista_lineas):
                     estadoFiltro = 7
                 else:
                     errores.append(
-                        'Error token FILTROS no encontrado en columna ' + str(columnas) + 'y  la linea' + str(lineas))
+                        'Error token FILTROS no encontrado en columna ' + str(filtro) + 'y  la linea' + str(lineas))
                     estadoFiltro = 0
                 continue
             if estadoFiltro == 7:
-                if str(separarLineas[filtro]) == ' ':
-                    estadoFiltro = 7
 
                 if str(separarLineas[filtro]) == '=':
                     estadoFiltro = 8
@@ -693,6 +693,9 @@ def AFD_ERRORES(lista_lineas):
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
+                else:
+                    errores.append('Error encontrado' + str(separarLineas[filtro]) + 'en la columna' + str(
+                        filtro) + ' en la linea' + str(lineas))
                 continue
             if estadoFiltro == 8:
 
@@ -706,16 +709,55 @@ def AFD_ERRORES(lista_lineas):
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     if str(separarLineas[filtro]) == ',':
-                          tokens[0] = ','
+                        tokens[0] = ','
                     else:
                         tokens[0] = ';'
-
                     tokens[1] = 'signo'
                     tokens[2] = lineas
                     listadetokens.append(tokens)
                     tokens = ['', '', '']
                     cacheFiltro = ''
                     estadoFiltro = 0
+        for separador in range(0, len(separarLineas)):
+            if estadoSeparador == 0:
+                if str(separarLineas[separador]) == '@':
+                    tokens[0] = '@'
+                    tokens[1] = 'separador'
+                    tokens[2] = lineas
+                    listadetokens.append(tokens)
+                    tokens = ['', '', '']
+                    estadoSeparador =1
+
+                continue
+            if estadoSeparador == 1:
+                if str(separarLineas[separador]) == '@':
+                    estadoSeparador =2
+                    tokens[0] = '@'
+                    tokens[1] = 'separador'
+                    tokens[2] = lineas
+                    listadetokens.append(tokens)
+                    tokens = ['', '', '']
+                continue
+            if estadoSeparador == 2:
+                if str(separarLineas[separador]) == '@':
+                    estadoSeparador =3
+                    tokens[0] = '@'
+                    tokens[1] = 'separador'
+                    tokens[2] = lineas
+                    listadetokens.append(tokens)
+                    tokens = ['', '', '']
+                continue
+            if estadoSeparador == 3:
+                if str(separarLineas[separador]) == '@':
+                    estadoSeparador =0
+                    tokens[0] = '@'
+                    tokens[1] = 'separador'
+                    tokens[2] = lineas
+                    listadetokens.append(tokens)
+                    tokens = ['', '', '']
+                else:
+                    errores.append(
+                        'Error token @@@@ no encontrado en columna ' + str(columnas) + 'y  la linea' + str(lineas))
 
 
 
